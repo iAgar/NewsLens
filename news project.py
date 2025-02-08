@@ -4,10 +4,14 @@ import requests
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import openai
+import threading
 from openai import OpenAI
 from pydantic import BaseModel
+import uvicorn
+from fastapi import FastAPI
 
 client = OpenAI()
+app = FastAPI()
 
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 articles=[]
@@ -74,10 +78,18 @@ def job():
     print(articles)
 
     
+@app.get('/')
+def get_news():
+    return articles
 
+schedule.every().day.at("13:54").do(job)
 
-schedule.every().day.at("12:56").do(job)
+def run_scheduler():
+    while 1:
+        schedule.run_pending()
+        time.sleep(1)
 
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
+if __name__ == "__main__":
+    scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
+    scheduler_thread.start()
+    uvicorn.run(app, port=8000)
