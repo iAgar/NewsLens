@@ -8,10 +8,12 @@ import threading
 from openai import OpenAI
 from pydantic import BaseModel
 import uvicorn
-from fastapi import FastAPI
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 client = OpenAI()
-app = FastAPI()
+app = Flask(__name__)
+CORS(app)
 
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 articles=[]
@@ -55,7 +57,8 @@ def job():
     print("chala")
     
     combined_content = get_posts()
-    
+    #combined_content = ["TechCorp Inc. announced 10,000 layoffs on February 8, 2025, citing declining revenue and restructuring efforts. CEO John Smith stated that the decision was necessary to maintain long-term stability. Employees affected will receive severance packages. The layoffs impact multiple departments globally. TechCorps stock fell 3 fter the announcement.", "Once again, we witness the ruthless nature of corporate greed. TechCorp Inc., a company that once prided itself on innovation and employee well-being, has now turned its back on 10,000 hardworking individuals. CEO John Smith, in a predictable display of corporate detachment, vaguely justified this mass firing as a 'necessary restructuring effort.'But lets not be fooled—this isnt about survival. Its about profits. Despite reporting billions in revenue last quarter, TechCorp still chooses to trim the fat at the expense of loyal employees. As usual, Wall Street reacted, with stocks dipping a mere 3%, a blip that will soon be forgotten. The human cost? Families struggling, careers upended, and trust shattered. Yet executives will keep their bonuses. This isn’t just a TechCorp issue; it’s a systemic problem. When will we hold these corporations accountable? When will workers stop being treated as expendable? The silence is deafening."]
+
     embeddings = embedding_model.encode(combined_content)
     clusters=[]
 
@@ -82,7 +85,7 @@ def job():
 def get_news():
     return articles
 
-schedule.every().day.at("13:54").do(job)
+schedule.every().day.at("15:56").do(job)
 
 def run_scheduler():
     while 1:
