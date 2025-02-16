@@ -12,13 +12,9 @@ function App() {
   const [data, setData] = useState('');
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/') 
-            .then(response => {
-                setData(response.data.message);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+        axios.get("http://127.0.0.1:8000/")
+            .then(response => {console.log(response.data);setData(response.data)})
+            .catch(error => console.error("Error:", error));
     }, []);
   var settings = {
     dots: true,
@@ -27,18 +23,19 @@ function App() {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const cardCount=[];
+  for(let i=0;i<data.length;i++){
+    cardCount.push(
+      <Card key={i}>
+        <CardContent>
+          {data[i].content}
+        </CardContent>
+      </Card>
+    )
+  }
   return (
-        <Slider {...settings}>
-      <Card>
-        <CardContent>
-          iuvesauidoshebvyoueinrfvsgoebwoyrgoesnruvyye
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent>
-          iuvesauidoshebvyoueinrfvsgoebwoyrgoesnruvyye
-        </CardContent>
-      </Card>
+    <Slider {...settings}>
+      {cardCount}
     </Slider>
   );
 }

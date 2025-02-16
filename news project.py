@@ -8,12 +8,26 @@ import threading
 from openai import OpenAI
 from pydantic import BaseModel
 import uvicorn
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from fastapi import FastAPI
+# from flask import Flask, jsonify, request
+# from flask_cors import CORS
+# from flask import send_from_directory
 
 client = OpenAI()
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+# Flask(__name__)
+# CORS(app)
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this for security in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 articles=[]
@@ -25,7 +39,7 @@ def summarise(contents: list)->str:
     combined_content = "\n".join(contents)
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are an expert in detecting and removing bias in articles"},
                 {"role": "user", "content": f"Summarize the following multiple news articles into a single unbiased report. Don't create any new information or assumptions on your own. Ensure that all the facts are present: {combined_content}"}
@@ -80,12 +94,15 @@ def job():
 
     print(articles)
 
+# @app.route('/')
+# def serve():
+#     return send_from_directory('react-frontend/build', 'index.html')
     
 @app.get('/')
 def get_news():
     return articles
 
-schedule.every().day.at("15:56").do(job)
+schedule.every().day.at("23:56").do(job)
 
 def run_scheduler():
     while 1:
@@ -96,3 +113,4 @@ if __name__ == "__main__":
     scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
     scheduler_thread.start()
     uvicorn.run(app, port=8000)
+    # app.run()
