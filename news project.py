@@ -9,20 +9,15 @@ from openai import OpenAI
 from pydantic import BaseModel
 import uvicorn
 from fastapi import FastAPI
-# from flask import Flask, jsonify, request
-# from flask_cors import CORS
-# from flask import send_from_directory
 
 client = OpenAI()
 app = FastAPI()
-# Flask(__name__)
-# CORS(app)
 
 from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Adjust this for security in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -68,7 +63,7 @@ def get_posts():
 
 
 def job():
-    print("chala")
+    print("Running")
     
     combined_content = get_posts()
     #combined_content = ["TechCorp Inc. announced 10,000 layoffs on February 8, 2025, citing declining revenue and restructuring efforts. CEO John Smith stated that the decision was necessary to maintain long-term stability. Employees affected will receive severance packages. The layoffs impact multiple departments globally. TechCorps stock fell 3 fter the announcement.", "Once again, we witness the ruthless nature of corporate greed. TechCorp Inc., a company that once prided itself on innovation and employee well-being, has now turned its back on 10,000 hardworking individuals. CEO John Smith, in a predictable display of corporate detachment, vaguely justified this mass firing as a 'necessary restructuring effort.'But lets not be fooled—this isnt about survival. Its about profits. Despite reporting billions in revenue last quarter, TechCorp still chooses to trim the fat at the expense of loyal employees. As usual, Wall Street reacted, with stocks dipping a mere 3%, a blip that will soon be forgotten. The human cost? Families struggling, careers upended, and trust shattered. Yet executives will keep their bonuses. This isn’t just a TechCorp issue; it’s a systemic problem. When will we hold these corporations accountable? When will workers stop being treated as expendable? The silence is deafening."]
@@ -93,16 +88,12 @@ def job():
         articles.append(Article(content=summary))
 
     print(articles)
-
-# @app.route('/')
-# def serve():
-#     return send_from_directory('react-frontend/build', 'index.html')
     
 @app.get('/')
 def get_news():
     return articles
 
-schedule.every().day.at("23:56").do(job)
+schedule.every().day.at("15:07").do(job)
 
 def run_scheduler():
     while 1:
@@ -113,4 +104,3 @@ if __name__ == "__main__":
     scheduler_thread = threading.Thread(target=run_scheduler, daemon=True)
     scheduler_thread.start()
     uvicorn.run(app, port=8000)
-    # app.run()

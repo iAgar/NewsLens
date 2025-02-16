@@ -10,7 +10,8 @@ import Slider from "react-slick";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <h1>Daily News App</h1>
+    <h1>NewsLens</h1>
+    <h3>Giving unbiased news from across the political spectrum</h3>
     <App />
   </React.StrictMode>
 );

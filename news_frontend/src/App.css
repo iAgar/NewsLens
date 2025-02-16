@@ -28,15 +28,10 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 CardContent{
   font-family: 'Times New Roman', Times, serif;
 }
+
+/* Slider{
+  width: 80%;
+} */
