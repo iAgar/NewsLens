@@ -23,7 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 articles=[]
 
